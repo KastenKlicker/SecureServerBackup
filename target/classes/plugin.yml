@@ -1,0 +1,19 @@
+main: me.zombie_striker.sr.Main
+version: 0.1
+name: SecureServerRestorer
+api-version: 1.16
+commands:
+  SecureServerRestorer:
+    description: Saves the server
+    aliases: [ssr]
+permissions:
+  secureserverrestorer.*:
+    description: Gives access to all PixelPrinter commands
+    children:
+      secureserverrestorer.save: true
+      secureserverrestorer.command: true
+      secureserverrestorer.restore: true
+      secureserverrestorer.setLogin: true
+author:
+  KastenKlicker
+  Zombie_Striker
