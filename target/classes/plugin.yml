@@ -13,7 +13,7 @@ permissions:
       secureserverrestorer.save: true
       secureserverrestorer.command: true
       secureserverrestorer.restore: true
-      secureserverrestorer.setLogin: true
+      secureserverrestorer.login: true
 author:
   KastenKlicker
   Zombie_Striker

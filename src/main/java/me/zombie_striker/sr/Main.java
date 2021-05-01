@@ -41,15 +41,8 @@ public class Main extends JavaPlugin {
 	private boolean currentlySaving = false;
 	private boolean useFTPS = false;
 	private boolean useSFTP = false;
-	private boolean strictHostKeyChecking = true;
-	private String hostKey = "";
-	private String serverFTP = "www.example.com";
-	private String userFTP = "User";
-	private String passwordFTP = "password";
-	private int portFTP = 80;
 	private String naming_format = "Backup-%date%";
 	private final SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd-HH-mm-ss");
-	private String removeFilePath = "";
 	private long maxSaveSize = -1;
 	private int maxSaveFiles = 1000;
 	private boolean deleteZipOnFail = false;
@@ -59,9 +52,37 @@ public class Main extends JavaPlugin {
 
 	private String separator = File.separator;
 
-
-
 	private int compression = Deflater.BEST_COMPRESSION;
+
+	//Login information
+	private String user, password1, password2;
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public void setPassword1(String password1) {
+		this.password1 = password1;
+	}
+
+	public void setPassword2(String password2) {
+		this.password2 = password2;
+	}
+
+	//Upload via FTPS/SFTP
+	private ArrayList<String[]> sftpList = new ArrayList<>();
+
+	public void setSftpList(ArrayList<String[]> sftpList) {
+		this.sftpList = sftpList;
+	}
+
+	private ArrayList<String[]> ftpsList = new ArrayList<>();
+
+	public void setFtpsList(ArrayList<String[]> ftpsServer) {
+		this.ftpsList = ftpsServer;
+	}
+
+
 
 	public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
 		File destFile = new File(destinationDir, zipEntry.getName());
@@ -181,17 +202,8 @@ public class Main extends JavaPlugin {
 		kickmessage = ChatColor.translateAlternateColorCodes('&', kicky);
 		useFTPS = (boolean) a("EnableFTPS", false);
 		useSFTP = (boolean) a("EnableSFTP", false);
-		strictHostKeyChecking = (boolean) a("strictHostKeyChecking", true);
-		hostKey = (String) a("hostKey", "");
-		serverFTP = (String) a("FTPAdress", serverFTP);
-		portFTP = (int) a("FTPPort", portFTP);
-		userFTP = (String) a("FTPUsername", userFTP);
-		passwordFTP = (String) a("FTPPassword", passwordFTP);
-
 
 		compression = (int) a("CompressionLevel_Max_9", compression);
-
-		removeFilePath = (String) a("FTP_Directory", removeFilePath);
 
 		hourToSaveAt = (int) a("AutoBackup-HourToBackup", hourToSaveAt);
 
@@ -243,7 +255,7 @@ public class Main extends JavaPlugin {
 
 		if (args.length == 1) {
 			List<String> list = new ArrayList<>();
-			String[] commands = new String[]{"disableAutoSaver", "enableAutoSaver", "login", "restore", "save", "setLogin", "stop", "toggleOptions"};
+			String[] commands = new String[]{"addServer","disableAutoSaver", "enableAutoSaver", "login", "removeServer", "restore", "save", "setLogin", "stop", "toggleOptions"};
 			for (String f : commands) {
 				if (f.toLowerCase().startsWith(args[0].toLowerCase()))
 					list.add(f);
@@ -281,6 +293,8 @@ public class Main extends JavaPlugin {
 			sender.sendMessage("/ssr toggleOptions : TBD");
 			sender.sendMessage("/ssr setLogin <user> <password1> <password2> : Set login information");
 			sender.sendMessage("/ssr login <user> <password1> <password2> : Log into Database");
+			sender.sendMessage("/ssr addServer <host> <port> <remote user> <remote password> <path> <useSFTP> <hostkey> : HostKey only required for SFTP");
+			sender.sendMessage("/ssr removeServer <host> : Remove Server from Database");
 			return true;
 		}
 		if (args[0].equalsIgnoreCase("restore")) {
@@ -385,7 +399,7 @@ public class Main extends JavaPlugin {
 		}
 
 		//KastenKlickers commands
-		return new Commands().onCommand(sender, command, label, args, prefix, this, separator);
+		return new Commands().onCommand(sender, command, label, args, prefix, this, separator, this, user, password1, password2);
 	}
 
 	public void save(CommandSender sender) {
@@ -461,9 +475,22 @@ public class Main extends JavaPlugin {
 					for (World world : autosave)
 						world.setAutoSave(true);
 					if (useSFTP) {
-						new FTPUtils(serverFTP, portFTP, userFTP, passwordFTP, removeFilePath, prefix, deleteZipOnFail, deleteZipOnFTP, zipFile, sender).uploadSFTP(hostKey, strictHostKeyChecking);
+						if (sftpList.isEmpty()) sender.sendMessage(prefix + ChatColor.RED + "Couldn't get servers from Database. Are you logged in?");
+						else {
+							new FTPUtils(prefix, deleteZipOnFail, deleteZipOnFTP, zipFile, sender).uploadSFTP(sftpList);
+						}
 					} else if (useFTPS) {
-						new FTPUtils(serverFTP, portFTP, userFTP, passwordFTP, removeFilePath, prefix, deleteZipOnFail, deleteZipOnFTP, zipFile, sender).uploadFTPS();
+						if (ftpsList.isEmpty()) sender.sendMessage(prefix + ChatColor.RED + "Couldn't get servers from Database. Are you logged in?");
+						else {
+
+							int i = 1;
+							int listSize = ftpsList.size();
+
+							for (String[] server : ftpsList) {
+								new FTPUtils(prefix, deleteZipOnFail, deleteZipOnFTP, zipFile, sender).uploadFTPS(server, listSize, i);
+								i++;
+							}
+						}
 					}
 				} catch (Exception e) {
 					e.printStackTrace();

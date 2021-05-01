@@ -15,7 +15,7 @@ final class LogFilterHelper {
 
     @VisibleForTesting
     static final List<String> COMMANDS_TO_SKIP = withAndWithoutPrefix(
-            "login ", "setlogin ");
+            "login ", "setlogin ", "addserver ", " removeserver");
 
     private static final String ISSUED_COMMAND_TEXT = "issued server command:";
 
