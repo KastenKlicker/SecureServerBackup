@@ -1,18 +1,14 @@
 package me.zombie_striker.sr;
 
-import de.kastenklicker.ssr.Commands;
-import de.kastenklicker.ssr.FTPUtils;
+import de.kastenklicker.ssb.Commands;
+import de.kastenklicker.ssb.FTPUtils;
 import fr.xephi.authme.output.Log4JFilter;
-import net.kyori.adventure.text.Component;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
@@ -22,14 +18,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class Main extends JavaPlugin {
 
 	private static List<String> exceptions = new ArrayList<>();
-	protected static String prefix = "&6[&3SecureServerRestorer&6]&8";
-	private static String kickmessage = " Restoring server to previous save. Please rejoin in a few seconds.";
+	protected static String prefix = "&6[&3SecureServerBackup&6]&8";
 	BukkitTask br = null;
 	private boolean saveTheConfig = false;
 	private long lastSave = 0;
@@ -82,20 +76,6 @@ public class Main extends JavaPlugin {
 		this.ftpsList = ftpsServer;
 	}
 
-
-
-	public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
-		File destFile = new File(destinationDir, zipEntry.getName());
-
-		String destDirPath = destinationDir.getCanonicalPath();
-		String destFilePath = destFile.getCanonicalPath();
-
-		if (!destFilePath.startsWith(destDirPath + File.separator)) {
-			throw new IOException("Entry is outside of the target dir: " + zipEntry.getName());
-		}
-
-		return destFile;
-	}
 
 	private static boolean isExempt(String path) {
 		path = path.toLowerCase().trim();
@@ -196,10 +176,8 @@ public class Main extends JavaPlugin {
 
 		naming_format = (String) a("FileNameFormat", naming_format);
 
-		String unPrefix = (String) a("prefix", "&6[&3SecureServerRestorer&6]&8");
+		String unPrefix = (String) a("prefix", "&6[&3SecureServerBackup&6]&8");
 		prefix = ChatColor.translateAlternateColorCodes('&', unPrefix);
-		String kicky = (String) a("kickMessage", unPrefix + " Restoring server to previous save. Please rejoin in a few seconds.");
-		kickmessage = ChatColor.translateAlternateColorCodes('&', kicky);
 		useFTPS = (boolean) a("EnableFTPS", false);
 		useSFTP = (boolean) a("EnableSFTP", false);
 
@@ -281,53 +259,26 @@ public class Main extends JavaPlugin {
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-		if (!sender.hasPermission("secureserverrestorer.command")) {
+		if (!sender.hasPermission("secureserverbackup.command")) {
 			sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
 			return true;
 		}
 		if (args.length == 0) {
-			sender.sendMessage(ChatColor.GOLD + "---===+Secure Server Restorer+===---");
-			sender.sendMessage("/ssr save : Saves the server");
-			sender.sendMessage("/ssr stop : Stops creating a backup of the server");
-			sender.sendMessage("/ssr restore <backup> : Restores server to previous backup (automatically restarts)");
-			sender.sendMessage("/ssr enableAutoSaver [1H,6H,1D,7D] : Configure how long it takes to autosave");
-			sender.sendMessage("/ssr disableAutoSaver : Disables the autosaver");
-			sender.sendMessage("/ssr toggleOptions : TBD");
-			sender.sendMessage("/ssr setLogin <user> <password1> <password2> : Set login information");
-			sender.sendMessage("/ssr login <user> <password1> <password2> : Log into Database");
-			sender.sendMessage("/ssr addServer <host> <port> <remote user> <remote password> <path> <sftp>: Add a new Server");
-			sender.sendMessage("/ssr removeServer <host> : Remove Server from Database");
-			return true;
-		}
-		if (args[0].equalsIgnoreCase("restore")) {
-			if(true) {
-				sender.sendMessage(prefix+ "Restore feature is temporarily disabled. Please load the files manually.");
-				return true;
-			}
-			if (!sender.hasPermission("secureserverrestorer.restore")) {
-				sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
-				return true;
-			}
-			if (currentlySaving) {
-				sender.sendMessage(prefix + " The server is currently being saved. Please wait.");
-				return true;
-			}
-			if (args.length < 2) {
-				sender.sendMessage(prefix + " A valid backup file is required.");
-				return true;
-			}
-			File backup = new File(getBackupFolder(), args[1]);
-			if (!backup.exists()) {
-				sender.sendMessage(prefix + " The file \"" + args[1] + "\" does not exist.");
-				return true;
-			}
-			restore(backup);
-			sender.sendMessage(prefix + " Restoration complete.");
+			sender.sendMessage(ChatColor.GOLD + "---===+Secure Server Backup+===---");
+			sender.sendMessage("/ssb save : Saves the server");
+			sender.sendMessage("/ssb stop : Stops creating a backup of the server");
+			sender.sendMessage("/ssb enableAutoSaver [1H,6H,1D,7D] : Configure how long it takes to autosave");
+			sender.sendMessage("/ssb disableAutoSaver : Disables the autosaver");
+			sender.sendMessage("/ssb toggleOptions : TBD");
+			sender.sendMessage("/ssb setLogin <user> <password1> <password2> : Set login information");
+			sender.sendMessage("/ssb login <user> <password1> <password2> : Log into Database");
+			sender.sendMessage("/ssb addServer <host> <port> <remote user> <remote password> <path> <sftp>: Add a new Server");
+			sender.sendMessage("/ssb removeServer <host> : Remove Server from Database");
 			return true;
 		}
 
 		if (args[0].equalsIgnoreCase("stop")) {
-			if (!sender.hasPermission("secureserverrestorer.save")) {
+			if (!sender.hasPermission("secureserverbackup.save")) {
 				sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
 				return true;
 			}
@@ -339,7 +290,7 @@ public class Main extends JavaPlugin {
 			return true;
 		}
 		if (args[0].equalsIgnoreCase("save")) {
-			if (!sender.hasPermission("secureserverrestorer.save")) {
+			if (!sender.hasPermission("secureserverbackup.save")) {
 				sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
 				return true;
 			}
@@ -351,7 +302,7 @@ public class Main extends JavaPlugin {
 			return true;
 		}
 		if (args[0].equalsIgnoreCase("disableAutoSaver")) {
-			if (!sender.hasPermission("secureserverrestorer.save")) {
+			if (!sender.hasPermission("secureserverbackup.save")) {
 				sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
 				return true;
 			}
@@ -363,7 +314,7 @@ public class Main extends JavaPlugin {
 			sender.sendMessage(prefix + " Canceled delay.");
 		}
 		if (args[0].equalsIgnoreCase("enableAutoSaver")) {
-			if (!sender.hasPermission("secureserverrestorer.save")) {
+			if (!sender.hasPermission("secureserverbackup.save")) {
 				sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
 				return true;
 			}
@@ -392,7 +343,7 @@ public class Main extends JavaPlugin {
 			sender.sendMessage(prefix + " Set the delay to \"" + delay + "\".");
 		}
 		if (args[0].equalsIgnoreCase("toggleOptions")) {
-			if (!sender.hasPermission("secureserverrestorer.save")) {
+			if (!sender.hasPermission("secureserverbackup.save")) {
 				sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
 				return true;
 			}
@@ -549,66 +500,6 @@ public class Main extends JavaPlugin {
 		}
 		militime *= 1000;
 		return militime;
-	}
-
-	public void restore(File backup) {
-
-		//Kick all players
-		for (Player player : Bukkit.getOnlinePlayers())
-
-			player.kick(Component.text(kickmessage));
-
-		//Disable all plugins safely.
-		for (Plugin p : Bukkit.getPluginManager().getPlugins()) {
-			if (p != this) {
-				try {
-					Bukkit.getPluginManager().disablePlugin(p);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		//Unload all worlds.
-		List<String> names = new ArrayList<>();
-		for (World w : Bukkit.getWorlds()) {
-			for (Chunk c : w.getLoadedChunks()) {
-				c.unload(false);
-			}
-			names.add(w.getName());
-			Bukkit.unloadWorld(w, true);
-		}
-		for(String worldnames : names){
-			File worldFile = new File(getMasterFolder(),worldnames);
-			if(worldFile.exists())
-				worldFile.delete();
-		}
-
-		//Start overriding files.
-		File parentTo = getMasterFolder().getParentFile();
-		try {
-			byte[] buffer = new byte[1024];
-			ZipInputStream zis = new ZipInputStream(new FileInputStream(backup));
-			ZipEntry zipEntry = zis.getNextEntry();
-			while (zipEntry != null) {
-				try {
-					File newFile = newFile(parentTo, zipEntry);
-					FileOutputStream fos = new FileOutputStream(newFile);
-					int len;
-					while ((len = zis.read(buffer)) > 0) {
-						fos.write(buffer, 0, len);
-					}
-					fos.close();
-					zipEntry = zis.getNextEntry();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-			zis.closeEntry();
-			zis.close();
-		} catch (Exception e4) {
-			e4.printStackTrace();
-		}
-		Bukkit.shutdown();
 	}
 
 	public void zipFolder(String srcFolder, String destZipFile) throws Exception {

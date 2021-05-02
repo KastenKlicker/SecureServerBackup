@@ -1,4 +1,4 @@
-package de.kastenklicker.ssr;
+package de.kastenklicker.ssb;
 
 import com.jcraft.jsch.*;
 import org.apache.commons.net.ftp.FTP;

@@ -1,4 +1,4 @@
-package de.kastenklicker.ssr;
+package de.kastenklicker.ssb;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;

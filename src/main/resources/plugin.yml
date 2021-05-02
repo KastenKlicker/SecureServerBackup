@@ -1,18 +1,17 @@
 main: me.zombie_striker.sr.Main
 version: 0.2
-name: SecureServerRestorer
+name: SecureServerBackup
 api-version: 1.16
 commands:
-  SecureServerRestorer:
+  SecureServerBackup:
     description: Saves the server
-    aliases: [ssr]
+    aliases: [ssb]
 permissions:
   secureserverrestorer.*:
     description: Gives access to all PixelPrinter commands
     children:
-      secureserverrestorer.save: true
-      secureserverrestorer.command: true
-      secureserverrestorer.restore: true
-      secureserverrestorer.login: true
+      secureserverbackup.save: true
+      secureserverbackup.command: true
+      secureserverbackup.login: true
 author:
   KastenKlicker

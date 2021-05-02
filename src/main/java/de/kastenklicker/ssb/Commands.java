@@ -1,4 +1,4 @@
-package de.kastenklicker.ssr;
+package de.kastenklicker.ssb;
 
 import me.zombie_striker.sr.Main;
 import org.bukkit.ChatColor;
@@ -23,7 +23,7 @@ public class Commands {
                 return true;
             }
 
-            if (!sender.hasPermission("serverrestorer.login")) {
+            if (!sender.hasPermission("secureserverbackup.login")) {
                 sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
                 return true;
             }
@@ -34,7 +34,7 @@ public class Commands {
             }
 
             if (args.length != 4) {
-                sender.sendMessage(prefix + "/ssr setLogin <user> <password1> <password2>");
+                sender.sendMessage(prefix + "/ssb setLogin <user> <password1> <password2>");
                 return true;
             }
 
@@ -61,16 +61,16 @@ public class Commands {
                 return true;
             }
 
-            if (!sender.hasPermission("serverrestorer.login")) {
+            if (!sender.hasPermission("secureserverbackup.login")) {
                 sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
                 return true;
             }
             if(!new File(plugin.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
-                sender.sendMessage(prefix + ChatColor.RED + "No Database found. Run /setLogin <user> <password1> <password2> to create Database.");
+                sender.sendMessage(prefix + ChatColor.RED + "No Database found. Run /ssb setLogin <user> <password1> <password2> to create Database.");
                 return true;
             }
             if (args.length != 4) {
-                sender.sendMessage(prefix + "/ssr login <user> <password1> <password2>");
+                sender.sendMessage(prefix + "/ssb login <user> <password1> <password2>");
                 return true;
             }
 
@@ -93,12 +93,12 @@ public class Commands {
                 sender.sendMessage(prefix + ChatColor.RED + " You have to be a player.");
                 return true;
             }
-            if (!sender.hasPermission("serverrestorer.login")) {
+            if (!sender.hasPermission("secureserverbackup.login")) {
                 sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
                 return true;
             }
             if(!new File(plugin.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
-                sender.sendMessage(prefix + ChatColor.RED + " No Database found. Run /setLogin <user> <password1> <password2> to create Database.");
+                sender.sendMessage(prefix + ChatColor.RED + " No Database found. Run /ssb setLogin <user> <password1> <password2> to create Database.");
                 return true;
             }
 
@@ -123,7 +123,7 @@ public class Commands {
 
             }
 
-            sender.sendMessage(prefix + " /ssr addServer <host> <port> <user> <password> <path> <sftp>");
+            sender.sendMessage(prefix + " /ssb addServer <host> <port> <user> <password> <path> <sftp>");
             return true;
 
         }
@@ -133,12 +133,12 @@ public class Commands {
                 sender.sendMessage(prefix + ChatColor.RED + " You have to be a player.");
                 return true;
             }
-            if (!sender.hasPermission("serverrestorer.login")) {
+            if (!sender.hasPermission("secureserverbackup.login")) {
                 sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
                 return true;
             }
             if(!new File(plugin.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
-                sender.sendMessage(prefix + ChatColor.RED + " No Database found. Run /setLogin <user> <password1> <password2> to create Database.");
+                sender.sendMessage(prefix + ChatColor.RED + " No Database found. Run /ssb setLogin <user> <password1> <password2> to create Database.");
                 return true;
             }
 
@@ -147,7 +147,7 @@ public class Commands {
                 return true;
             }
             if (args.length != 2) {
-                sender.sendMessage(prefix + " /ssr removeServer <host>");
+                sender.sendMessage(prefix + " /ssb removeServer <host>");
                 return true;
             }
 
