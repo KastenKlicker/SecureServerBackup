@@ -214,6 +214,8 @@ public class Main extends JavaPlugin {
 			exceptions.add("dynmap");
 			exceptions.add(".lock");
 			exceptions.add("pixelprinter");
+			exceptions.add("server.mv.db");
+			exceptions.add("server.trace.db");
 		}
 		exceptions = (List<String>) a("exceptions", exceptions);
 
@@ -293,7 +295,7 @@ public class Main extends JavaPlugin {
 			sender.sendMessage("/ssr toggleOptions : TBD");
 			sender.sendMessage("/ssr setLogin <user> <password1> <password2> : Set login information");
 			sender.sendMessage("/ssr login <user> <password1> <password2> : Log into Database");
-			sender.sendMessage("/ssr addServer <host> <port> <remote user> <remote password> <path> <useSFTP> <hostkey> : HostKey only required for SFTP");
+			sender.sendMessage("/ssr addServer <host> <port> <remote user> <remote password> <path> <sftp>: Add a new Server");
 			sender.sendMessage("/ssr removeServer <host> : Remove Server from Database");
 			return true;
 		}
@@ -475,20 +477,51 @@ public class Main extends JavaPlugin {
 					for (World world : autosave)
 						world.setAutoSave(true);
 					if (useSFTP) {
-						if (sftpList.isEmpty()) sender.sendMessage(prefix + ChatColor.RED + "Couldn't get servers from Database. Are you logged in?");
-						else {
-							new FTPUtils(prefix, deleteZipOnFail, deleteZipOnFTP, zipFile, sender).uploadSFTP(sftpList);
-						}
-					} else if (useFTPS) {
-						if (ftpsList.isEmpty()) sender.sendMessage(prefix + ChatColor.RED + "Couldn't get servers from Database. Are you logged in?");
+						if (sftpList.isEmpty()) sender.sendMessage(prefix + ChatColor.RED + " Couldn't get servers from Database. Are you logged in?");
 						else {
 
 							int i = 1;
 							int listSize = ftpsList.size();
+							boolean exception = false;
+
+							for (String[] server : sftpList) {
+								sender.sendMessage(prefix + " Starting SFTP Transfer(" + i + "/" + listSize + ").");
+								if (new FTPUtils(prefix, sender).uploadSFTP(server, zipFile)) exception = true;
+								i++;
+							}
+
+							if (exception) {
+								sender.sendMessage(prefix + ChatColor.RED + " There was an exception while uploading the backup using SFTP.");
+								if (deleteZipOnFail) zipFile.delete();
+							}
+							else {
+								sender.sendMessage(prefix + ChatColor.GREEN + " Uploaded backup successfully.");
+								if (deleteZipOnFTP) zipFile.delete();
+							}
+
+						}
+					}
+					if (useFTPS) {
+						if (ftpsList.isEmpty()) sender.sendMessage(prefix + ChatColor.RED + " Couldn't get servers from Database. Are you logged in?");
+						else {
+
+							int i = 1;
+							int listSize = ftpsList.size();
+							boolean exception = false;
 
 							for (String[] server : ftpsList) {
-								new FTPUtils(prefix, deleteZipOnFail, deleteZipOnFTP, zipFile, sender).uploadFTPS(server, listSize, i);
+								sender.sendMessage(prefix + " Starting FTPS Transfer(" + i + "/" + listSize + ").");
+								if (new FTPUtils(prefix, sender).uploadFTPS(server, zipFile)) exception = true;
 								i++;
+							}
+
+							if (exception) {
+								sender.sendMessage(prefix + ChatColor.RED + " There was an exception while uploading the backup using FTPS.");
+								if (deleteZipOnFail) zipFile.delete();
+							}
+							else {
+								sender.sendMessage(prefix + ChatColor.GREEN + " Uploaded backup successfully.");
+								if (deleteZipOnFTP) zipFile.delete();
 							}
 						}
 					}

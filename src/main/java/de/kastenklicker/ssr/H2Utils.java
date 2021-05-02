@@ -51,6 +51,7 @@ public class H2Utils {
         try {
             stmt.execute(h2);
         } catch (SQLException e) {
+            sender.sendMessage(prefix + ChatColor.RED + " An error occurred. Error printed in the console.");
             e.printStackTrace();
         }
     }
@@ -64,7 +65,7 @@ public class H2Utils {
         }
     }
 
-    public boolean addServer(String host, String portString, String user, String password, String path, String useSFTP, String hostkey) {
+    public boolean addServer(String host, String portString, String user, String password, String path, boolean sftp) {
 
         createNewTable();
 
@@ -78,53 +79,39 @@ public class H2Utils {
             return false;
         }
 
-        if(useSFTP.equalsIgnoreCase("sftp")) {
+        String h2;
+        String hostkey = null;
 
-            String h2 = "INSERT INTO Server(host, port, user, password, path, hostKey) VALUES(?,?,?,?,?,?)";
-            try (PreparedStatement pStmt = conn.prepareStatement(h2)){
-                pStmt.setString(1, host);
-                pStmt.setInt(2, port);
-                pStmt.setString(3, user);
-                pStmt.setString(4, password);
-                pStmt.setString(5, path);
-                pStmt.setString(6, hostkey);
-
-                pStmt.executeUpdate();
-
-            } catch (SQLException e) {
-
-                if (e.getMessage().contains("PRIMARY_KEY")) sender.sendMessage(prefix + ChatColor.RED + " Server with the address: " + host + " already saved in the Database.");
-                else {
-                    e.printStackTrace();
-                }
-
+        if (sftp) {
+            hostkey = new FTPUtils(prefix, sender).getHostKey(host.toLowerCase(), port, user, password);
+            if (hostkey == null) {
                 return false;
-
             }
+            h2 = "INSERT INTO Server(host, port, user, password, path, hostkey) VALUES(?,?,?,?,?,?)";
 
         }
-        else {
-            String h2 = "INSERT INTO Server(host, port, user, password, path) VALUES(?,?,?,?,?)";
+        else h2 = "INSERT INTO Server(host, port, user, password, path) VALUES(?,?,?,?,?)";
 
-            try (PreparedStatement pStmt = conn.prepareStatement(h2)){
-                pStmt.setString(1, host);
-                pStmt.setInt(2, port);
-                pStmt.setString(3, user);
-                pStmt.setString(4, password);
-                pStmt.setString(5, path);
+        try (PreparedStatement pStmt = conn.prepareStatement(h2)){
+            pStmt.setString(1, host.toLowerCase());
+            pStmt.setInt(2, port);
+            pStmt.setString(3, user);
+            pStmt.setString(4, password);
+            pStmt.setString(5, path);
+            if (sftp) pStmt.setString(6, hostkey);
 
-                pStmt.executeUpdate();
+            pStmt.executeUpdate();
 
-            } catch (SQLException e) {
+        } catch (SQLException e) {
 
-                if (e.getMessage().contains("PRIMARY_KEY")) sender.sendMessage(prefix + ChatColor.RED + " Server with the address: " + host + " already saved in the Database.");
-                else {
-                    e.printStackTrace();
-                }
-
-                return false;
-
+            if (e.getMessage().contains("PRIMARY_KEY")) sender.sendMessage(prefix + ChatColor.RED + " Server with the address: " + host.toLowerCase() + " already saved in the Database.");
+            else {
+                sender.sendMessage(prefix + ChatColor.RED + " An error occurred. Error printed in the console.");
+                e.printStackTrace();
             }
+
+            return false;
+
         }
 
         return true;
@@ -135,11 +122,12 @@ public class H2Utils {
         String h2 = "DELETE FROM SERVER WHERE HOST=?";
 
         try (PreparedStatement pStmt = conn.prepareStatement(h2)) {
-            pStmt.setString(1, host);
+            pStmt.setString(1, host.toLowerCase());
             pStmt.executeUpdate();
 
             sender.sendMessage(prefix + ChatColor.GREEN + " Server removed successfully.");
         } catch (SQLException e) {
+            sender.sendMessage(prefix + ChatColor.RED + " An error occurred. Error printed in the console.");
             e.printStackTrace();
         }
     }

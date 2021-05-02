@@ -1,5 +1,5 @@
 main: me.zombie_striker.sr.Main
-version: 0.1
+version: 0.2
 name: SecureServerRestorer
 api-version: 1.16
 commands:
@@ -16,4 +16,3 @@ permissions:
       secureserverrestorer.login: true
 author:
   KastenKlicker
-  Zombie_Striker

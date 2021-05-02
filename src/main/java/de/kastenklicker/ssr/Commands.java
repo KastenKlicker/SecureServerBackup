@@ -38,14 +38,19 @@ public class Commands {
                 return true;
             }
 
-            if ( args[1].trim().length() < 1 || args[2].trim().length() < 6 || args[3].trim().length() < 6) {
-                sender.sendMessage(prefix + ChatColor.RED + "Username (at least 1) or Password (at least 6) to short.");
+            if ( args[2].trim().length() < 6 || args[3].trim().length() < 6) {
+                sender.sendMessage(prefix + ChatColor.RED + " Password must be at least 6 chars long.");
+                return true;
             }
 
             H2Utils h2 = new H2Utils(dataFolder + separator, args[1], args[2] + " " + args[3], sender, prefix);
             h2.createNewTable();
 
             h2.close();
+
+            Main.setUser(args[1]);
+            Main.setPassword1(args[2]);
+            Main.setPassword2(args[3]);
 
             return true;
         }
@@ -102,9 +107,12 @@ public class Commands {
                 return true;
             }
 
-            if (args.length == 8) {
+            if (args.length == 6 || args.length == 7) {
+
+                boolean sftp = args.length == 7;
+
                 H2Utils h2 = new H2Utils(dataFolder + separator, user, password1 + " " + password2, sender, prefix);
-                if (h2.addServer(args[1], args[2], args[3], args[4], args[5], args[6], args[7])) sender.sendMessage(prefix + ChatColor.GREEN + " Added server successfully.");
+                if (h2.addServer(args[1], args[2], args[3], args[4], args[5], sftp)) sender.sendMessage(prefix + ChatColor.GREEN + " Added server successfully.");
 
                 Main.setSftpList(h2.getSFTPServers());
                 Main.setFtpsList(h2.getFTPSServers());
@@ -112,21 +120,10 @@ public class Commands {
                 h2.close();
 
                 return true;
+
             }
 
-            if (args.length == 6) {
-                H2Utils h2 = new H2Utils(dataFolder + separator, user, password1 + " " + password2, sender, prefix);
-                if (h2.addServer(args[1], args[2], args[3], args[4], args[5], "ftp", "nope")) sender.sendMessage(prefix + ChatColor.GREEN + " Added server successfully.");
-
-                Main.setSftpList(h2.getSFTPServers());
-                Main.setFtpsList(h2.getFTPSServers());
-
-                h2.close();
-
-                return true;
-            }
-
-            sender.sendMessage(prefix + " /ssr addServer <host> <port> <user> <password> <path> <sftp> <hostkey>");
+            sender.sendMessage(prefix + " /ssr addServer <host> <port> <user> <password> <path> <sftp>");
             return true;
 
         }
@@ -159,6 +156,8 @@ public class Commands {
 
             Main.setSftpList(h2.getSFTPServers());
             Main.setFtpsList(h2.getFTPSServers());
+
+            h2.close();
 
             return true;
 
