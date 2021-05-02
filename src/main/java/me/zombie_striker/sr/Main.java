@@ -429,7 +429,7 @@ public class Main extends JavaPlugin {
 						else {
 
 							int i = 1;
-							int listSize = ftpsList.size();
+							int listSize = sftpList.size();
 							boolean exception = false;
 
 							for (String[] server : sftpList) {
