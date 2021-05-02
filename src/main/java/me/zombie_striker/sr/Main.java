@@ -108,13 +108,10 @@ public class Main extends JavaPlugin {
 	}
 
 	public static File firstFileModified(File dir) {
-		File[] files = dir.listFiles(new FileFilter() {
-			public boolean accept(File file) {
-				return file.isFile();
-			}
-		});
+		File[] files = dir.listFiles(File::isFile);
 		long lastMod = Long.MAX_VALUE;
 		File choice = null;
+		assert files != null;
 		for (File file : files) {
 			if (file.lastModified() < lastMod) {
 				choice = file;
@@ -352,7 +349,7 @@ public class Main extends JavaPlugin {
 		}
 
 		//KastenKlickers commands
-		return new Commands().onCommand(sender, command, label, args, prefix, this, separator, this, user, password1, password2);
+		return new Commands().onCommand(sender, args, prefix, this, separator, this, user, password1, password2);
 	}
 
 	public void save(CommandSender sender) {

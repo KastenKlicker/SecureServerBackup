@@ -2,7 +2,6 @@ package de.kastenklicker.ssb;
 
 import me.zombie_striker.sr.Main;
 import org.bukkit.ChatColor;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,7 +11,7 @@ import java.io.File;
 
 public class Commands {
 
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args, String prefix, JavaPlugin plugin, String separator, Main Main, String user, String password1, String password2) {
+    public boolean onCommand(CommandSender sender, String[] args, String prefix, JavaPlugin plugin, String separator, Main Main, String user, String password1, String password2) {
 
         String dataFolder = plugin.getDataFolder().getAbsolutePath();
 
@@ -88,7 +87,7 @@ public class Commands {
             return true;
         }
 
-        if (args[0].equalsIgnoreCase("addserver")) {
+        if (args[0].equalsIgnoreCase("addServer")) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage(prefix + ChatColor.RED + " You have to be a player.");
                 return true;
