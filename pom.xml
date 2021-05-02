@@ -6,7 +6,7 @@
 
     <groupId>de.kastenklicker</groupId>
     <artifactId>SecureServerBackup</artifactId>
-    <version>0.2</version>
+    <version>1.0.1</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
