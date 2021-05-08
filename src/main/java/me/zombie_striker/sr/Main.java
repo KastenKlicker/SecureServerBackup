@@ -232,7 +232,7 @@ public class Main extends JavaPlugin {
 
 		if (args.length == 1) {
 			List<String> list = new ArrayList<>();
-			String[] commands = new String[]{"addServer","disableAutoSaver", "enableAutoSaver", "login", "removeServer", "restore", "save", "setLogin", "stop", "toggleOptions"};
+			String[] commands = new String[]{"addServer","disableAutoSaver", "enableAutoSaver", "login", "removeServer", "save", "setLogin", "stop", "toggleOptions"};
 			for (String f : commands) {
 				if (f.toLowerCase().startsWith(args[0].toLowerCase()))
 					list.add(f);
@@ -241,13 +241,10 @@ public class Main extends JavaPlugin {
 
 		}
 
-		if (args.length > 1) {
-			if (args[0].equalsIgnoreCase("restore")) {
+		if (args.length == 7) {
+			if (args[0].equalsIgnoreCase("addServer")) {
 				List<String> list = new ArrayList<>();
-				for (File f : Objects.requireNonNull(getBackupFolder().listFiles())) {
-					if (f.getName().toLowerCase().startsWith(args[1].toLowerCase()))
-						list.add(f.getName());
-				}
+				list.add("sftp");
 				return list;
 			}
 		}
