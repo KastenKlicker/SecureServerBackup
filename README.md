@@ -1,6 +1,8 @@
 # SecureServerBackup
 More secure version of ZombieStriker's ServerRestorer.
 
+Backup your server fast without lags or freeze and upload them to a SFTP/FTPS server.
+
 Additional Features:
   - Paper API
   - Backup to multiple servers using H2 Database
