@@ -3,7 +3,6 @@ package de.kastenklicker.ssb;
 import me.zombie_striker.sr.Main;
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
@@ -15,12 +14,12 @@ public class Commands {
 
         String dataFolder = plugin.getDataFolder().getAbsolutePath();
 
-        if (args[0].equalsIgnoreCase("setLogin")) {
+        if (!sender.hasPermission("secureserverbackup.login")) {
+            sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
+            return true;
+        }
 
-            if (!sender.hasPermission("secureserverbackup.login")) {
-                sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
-                return true;
-            }
+        if (args[0].equalsIgnoreCase("setLogin")) {
 
             if(new File(plugin.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
                 sender.sendMessage(prefix + ChatColor.RED + "Login already set. To change your login information delete the server.mv.db file. All saved hosts will be deleted.");
@@ -51,10 +50,6 @@ public class Commands {
 
         if (args[0].equalsIgnoreCase("login")) {
 
-            if (!sender.hasPermission("secureserverbackup.login")) {
-                sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
-                return true;
-            }
             if(!new File(plugin.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
                 sender.sendMessage(prefix + ChatColor.RED + "No Database found. Run /ssb setLogin <user> <password1> <password2> to create Database.");
                 return true;
@@ -80,10 +75,6 @@ public class Commands {
 
         if (args[0].equalsIgnoreCase("addServer")) {
 
-            if (!sender.hasPermission("secureserverbackup.login")) {
-                sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
-                return true;
-            }
             if(!new File(plugin.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
                 sender.sendMessage(prefix + ChatColor.RED + " No Database found. Run /ssb setLogin <user> <password1> <password2> to create Database.");
                 return true;
@@ -117,10 +108,6 @@ public class Commands {
 
         if (args[0].equalsIgnoreCase("removeServer")) {
 
-            if (!sender.hasPermission("secureserverbackup.login")) {
-                sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
-                return true;
-            }
             if(!new File(plugin.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
                 sender.sendMessage(prefix + ChatColor.RED + " No Database found. Run /ssb setLogin <user> <password1> <password2> to create Database.");
                 return true;
