@@ -17,11 +17,6 @@ public class Commands {
 
         if (args[0].equalsIgnoreCase("setLogin")) {
 
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(prefix + ChatColor.RED + " You have to be a player.");
-                return true;
-            }
-
             if (!sender.hasPermission("secureserverbackup.login")) {
                 sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
                 return true;
@@ -55,10 +50,6 @@ public class Commands {
         }
 
         if (args[0].equalsIgnoreCase("login")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(prefix + ChatColor.RED + " You have to be a player.");
-                return true;
-            }
 
             if (!sender.hasPermission("secureserverbackup.login")) {
                 sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
@@ -88,10 +79,7 @@ public class Commands {
         }
 
         if (args[0].equalsIgnoreCase("addServer")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(prefix + ChatColor.RED + " You have to be a player.");
-                return true;
-            }
+
             if (!sender.hasPermission("secureserverbackup.login")) {
                 sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
                 return true;
@@ -128,10 +116,7 @@ public class Commands {
         }
 
         if (args[0].equalsIgnoreCase("removeServer")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage(prefix + ChatColor.RED + " You have to be a player.");
-                return true;
-            }
+
             if (!sender.hasPermission("secureserverbackup.login")) {
                 sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");
                 return true;

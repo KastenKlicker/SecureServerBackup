@@ -43,9 +43,9 @@ public class FTPUtils {
             //Connect
             Session session = jSch.getSession(server[2], server[0], Integer.parseInt(server[1]));
             session.setPassword(server[3]);
-            session.connect();
+            session.connect(1000 * 20);
             ChannelSftp channel = (ChannelSftp) session.openChannel("sftp");
-            channel.connect();
+            channel.connect(1000 * 20);
 
             //Upload
             channel.put(zipFile.getPath(), server[4] + zipFile.getName());
@@ -76,7 +76,7 @@ public class FTPUtils {
             Session session = jsch.getSession(user, host, port);
             session.setPassword(password);
             session.setConfig(config);
-            session.connect();
+            session.connect(1000 * 20);
             hostkey = session.getHostKey().getKey();
             session.disconnect();
         } catch (JSchException e) {

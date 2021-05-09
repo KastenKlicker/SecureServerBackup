@@ -3,17 +3,23 @@ package me.zombie_striker.sr;
 import de.kastenklicker.ssb.Commands;
 import de.kastenklicker.ssb.FTPUtils;
 import fr.xephi.authme.output.Log4JFilter;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.apache.logging.log4j.LogManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.*;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.zip.Deflater;
@@ -268,6 +274,14 @@ public class Main extends JavaPlugin {
 			sender.sendMessage("/ssb login <user> <password1> <password2> : Log into Database");
 			sender.sendMessage("/ssb addServer <host> <port> <remote user> <remote password> <path> <sftp>: Add a new Server");
 			sender.sendMessage("/ssb removeServer <host> : Remove Server from Database");
+
+			TextComponent Url = new TextComponent("Go to the Wiki");
+			Url.setColor(net.md_5.bungee.api.ChatColor.AQUA);
+			Url.setBold(true);
+			Url.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/KastenKlicker/SecureServerBackup/wiki"));
+			Url.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text("Click here!")));
+
+			sender.sendMessage(Url);
 			return true;
 		}
 
@@ -295,6 +309,12 @@ public class Main extends JavaPlugin {
 			save(sender);
 			return true;
 		}
+
+		if (!(sender instanceof Player)) {
+			sender.sendMessage(prefix + ChatColor.RED + " You have to be a player.");
+			return true;
+		}
+
 		if (args[0].equalsIgnoreCase("disableAutoSaver")) {
 			if (!sender.hasPermission("secureserverbackup.save")) {
 				sender.sendMessage(prefix + ChatColor.RED + " You do not have permission to use this command.");

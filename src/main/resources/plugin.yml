@@ -1,5 +1,5 @@
 main: me.zombie_striker.sr.Main
-version: 1.0.2
+version: 1.0.3
 name: SecureServerBackup
 api-version: 1.16
 commands:
