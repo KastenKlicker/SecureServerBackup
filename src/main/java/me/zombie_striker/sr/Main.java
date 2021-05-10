@@ -22,6 +22,7 @@ import java.io.*;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.zip.Deflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -154,6 +155,8 @@ public class Main extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
+		Logger logger = this.getLogger();
+
 		//Filter Logs
 		try {
 			Class.forName("org.apache.logging.log4j.core.filter.AbstractFilter");
@@ -163,6 +166,13 @@ public class Main extends JavaPlugin {
 
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		}
+
+		//Check if database exists
+		if(!new File(this.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
+			logger.warning("No Database detected!");
+			logger.warning("Look at the wiki for help");
+			logger.warning("https://github.com/KastenKlicker/SecureServerBackup/wiki/First-steps");
 		}
 
 		master = getDataFolder().getAbsoluteFile().getParentFile().getParentFile();

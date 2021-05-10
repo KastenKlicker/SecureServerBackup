@@ -48,12 +48,13 @@ public class Commands {
             return true;
         }
 
+        if(!new File(plugin.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
+            sender.sendMessage(prefix + ChatColor.RED + "No Database found. Run /ssb setLogin <user> <password1> <password2> to create Database.");
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("login")) {
 
-            if(!new File(plugin.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
-                sender.sendMessage(prefix + ChatColor.RED + "No Database found. Run /ssb setLogin <user> <password1> <password2> to create Database.");
-                return true;
-            }
             if (args.length != 4) {
                 sender.sendMessage(prefix + "/ssb login <user> <password1> <password2>");
                 return true;
@@ -74,11 +75,6 @@ public class Commands {
         }
 
         if (args[0].equalsIgnoreCase("addServer")) {
-
-            if(!new File(plugin.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
-                sender.sendMessage(prefix + ChatColor.RED + " No Database found. Run /ssb setLogin <user> <password1> <password2> to create Database.");
-                return true;
-            }
 
             if (user == null) {
                 sender.sendMessage(prefix + ChatColor.RED + " You aren't logged in.");
@@ -107,11 +103,6 @@ public class Commands {
         }
 
         if (args[0].equalsIgnoreCase("removeServer")) {
-
-            if(!new File(plugin.getDataFolder().getPath() + separator + "server.mv.db").exists()) {
-                sender.sendMessage(prefix + ChatColor.RED + " No Database found. Run /ssb setLogin <user> <password1> <password2> to create Database.");
-                return true;
-            }
 
             if (user == null) {
                 sender.sendMessage(prefix + ChatColor.RED + " You aren't logged in.");
