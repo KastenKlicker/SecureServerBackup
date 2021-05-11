@@ -8,6 +8,7 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.apache.logging.log4j.LogManager;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.World;
@@ -19,7 +20,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.*;
-import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.logging.Logger;
@@ -154,6 +154,10 @@ public class Main extends JavaPlugin {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onEnable() {
+
+		//bstats Metrics
+		int pluginId = 11313;
+		Metrics metrics = new Metrics(this, pluginId);
 
 		Logger logger = this.getLogger();
 

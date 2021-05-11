@@ -6,7 +6,7 @@
 
     <groupId>de.kastenklicker</groupId>
     <artifactId>SecureServerBackup</artifactId>
-    <version>1.0.3</version>
+    <version>1.1.0</version>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>
@@ -34,6 +34,14 @@
             <artifactId>paper-api</artifactId>
             <version>1.16.5-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.bstats/bstats-bukkit -->
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>2.2.1</version>
+            <scope>compile</scope>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.h2database/h2 -->
@@ -67,5 +75,43 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>me.zombie_striker.sr</shadedPattern>
+                        </relocation>
+                    </relocations>
+
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation=
+                                                     "org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>me.zombie_striker.sr.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                            <finalName>SecureServerBackup</finalName>
+
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
