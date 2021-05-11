@@ -1,5 +1,5 @@
 # SecureServerBackup
-<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/kastenklicker/secureserverbackup/total">
+<img alt="GitHub all releases" src="https://img.shields.io/github/downloads/kastenklicker/secureserverbackup/total?color=green&logo=github&style=flat-square">
 More secure version of ZombieStriker's ServerRestorer.
 
 Backup your server fast without lags or freeze and upload them to a SFTP/FTPS server.
