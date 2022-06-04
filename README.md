@@ -9,7 +9,7 @@ Additional Features:
   - Backup to multiple servers using H2 Database
   - Database AES 128bit encrypted
 
-Test Enviroment:
+Test Environment:
   - Minecraft Server running on PaperMC's 1.16.5 v651 server-software and Java 11
   - FTPS Server Fritzbox 7590
   - SFTP Server Ubuntu 20.04

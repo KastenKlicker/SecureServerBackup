@@ -42,7 +42,7 @@ public class H2Utils {
         String h2 = "CREATE TABLE IF NOT EXISTS Server(" +
                 "HOST VARCHAR(255) PRIMARY KEY," +
                 "PORT INT," +
-                "USER VARCHAR(255)," +
+                "USERNAME VARCHAR(255)," +
                 "PASSWORD VARCHAR(255)," +
                 "PATH VARCHAR(255)," +
                 "HOSTKEY VARCHAR(600) NULL" +
@@ -87,10 +87,10 @@ public class H2Utils {
             if (hostkey == null) {
                 return false;
             }
-            h2 = "INSERT INTO Server(host, port, user, password, path, hostkey) VALUES(?,?,?,?,?,?)";
+            h2 = "INSERT INTO Server(host, port, username, password, path, hostkey) VALUES(?,?,?,?,?,?)";
 
         }
-        else h2 = "INSERT INTO Server(host, port, user, password, path) VALUES(?,?,?,?,?)";
+        else h2 = "INSERT INTO Server(host, port, username, password, path) VALUES(?,?,?,?,?)";
 
         try (PreparedStatement pStmt = conn.prepareStatement(h2)){
             pStmt.setString(1, host.toLowerCase());
@@ -104,9 +104,9 @@ public class H2Utils {
 
         } catch (SQLException e) {
 
-            if (e.getMessage().contains("PRIMARY_KEY")) sender.sendMessage(prefix + ChatColor.RED + " Server with the address: " + host.toLowerCase() + " already saved in the Database.");
+            if (e.getMessage().contains("PRIMARY_KEY")) sender.sendMessage(prefix + ChatColor.RED + " Server with the address: " + host.toLowerCase() + " is already saved in the Database.");
             else {
-                sender.sendMessage(prefix + ChatColor.RED + " An error occurred. Error printed in the console.");
+                sender.sendMessage(prefix + ChatColor.RED + " An error occurred. Error is printed in the console.");
                 e.printStackTrace();
             }
 
@@ -125,9 +125,9 @@ public class H2Utils {
             pStmt.setString(1, host.toLowerCase());
             pStmt.executeUpdate();
 
-            sender.sendMessage(prefix + ChatColor.GREEN + " Server removed successfully.");
+            sender.sendMessage(prefix + ChatColor.GREEN + " Server was removed successfully.");
         } catch (SQLException e) {
-            sender.sendMessage(prefix + ChatColor.RED + " An error occurred. Error printed in the console.");
+            sender.sendMessage(prefix + ChatColor.RED + " An error occurred. Error is printed in the console.");
             e.printStackTrace();
         }
     }
@@ -149,7 +149,7 @@ public class H2Utils {
                 String[] server = {
                         rs.getString("HOST"),
                         Integer.toString(rs.getInt("PORT")),
-                        rs.getString("USER"),
+                        rs.getString("USERNAME"),
                         rs.getString("PASSWORD"),
                         rs.getString("PATH"),
                         rs.getString("HOSTKEY")
@@ -182,7 +182,7 @@ public class H2Utils {
                 String[] server = {
                         rs.getString("HOST"),
                         Integer.toString(rs.getInt("PORT")),
-                        rs.getString("USER"),
+                        rs.getString("USERNAME"),
                         rs.getString("PASSWORD"),
                         rs.getString("PATH")
                 };
