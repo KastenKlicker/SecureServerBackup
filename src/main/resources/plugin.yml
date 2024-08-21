@@ -1,17 +1,12 @@
-main: me.zombie_striker.sr.Main
-version: 1.1.4
+main: de.kastenklicker.secureserverbackup.SecureServerBackup
+version: 2.0.0
 name: SecureServerBackup
-api-version: 1.16
-commands:
-  SecureServerBackup:
-    description: Saves the server
-    aliases: [ssb]
-permissions:
-  secureserverrestorer.*:
-    description: Gives access to all PixelPrinter commands
-    children:
-      secureserverbackup.save: true
-      secureserverbackup.command: true
-      secureserverbackup.login: true
+description: Plugin to backup your server.
+api-version: 1.21.1
 author:
   KastenKlicker
+website: https://github.com/KastenKlicker/SecureServerBackup
+commands:
+  backup:
+    description: "Backup your server"
+    usage: /backup
