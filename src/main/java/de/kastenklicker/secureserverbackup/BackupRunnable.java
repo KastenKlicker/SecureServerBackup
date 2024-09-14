@@ -2,17 +2,13 @@ package de.kastenklicker.secureserverbackup;
 
 import java.io.File;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitWorker;
 
-/**
- * Class to integrate Backup functionality with paper
- */
-public class BackupConsumerTask implements Consumer<BukkitTask> {
+public class BackupRunnable extends BukkitRunnable {
 
     private final List<String> excludeFiles;
     private final File backupDirectory;
@@ -26,7 +22,7 @@ public class BackupConsumerTask implements Consumer<BukkitTask> {
     /**
      * Constructor sets up everything needed to back up the server
      */
-    public BackupConsumerTask() {
+    public BackupRunnable() {
 
         // Setup custom logging
         this.backupLogger = new BackupLogger();
@@ -65,12 +61,8 @@ public class BackupConsumerTask implements Consumer<BukkitTask> {
         }
     }
 
-    /**
-     * Task to back up server
-     * @param bukkitTask bukkitTask
-     */
     @Override
-    public void accept(BukkitTask bukkitTask) {
+    public void run() {
         /*
         Check if backup is already running
          */
@@ -92,7 +84,7 @@ public class BackupConsumerTask implements Consumer<BukkitTask> {
         // If the numbers of workers is greater than 1, an update is already running
         if (workers.size() > 1) {
             backupLogger.warning("A backup is already running, cancelling newer backup task");
-            bukkitTask.cancel();
+            this.cancel();
             return;
         }
 
@@ -115,6 +107,6 @@ public class BackupConsumerTask implements Consumer<BukkitTask> {
             }
         }
 
-        logger.info("Finished Backup.");
+        backupLogger.info("Finished Backup.");
     }
 }
