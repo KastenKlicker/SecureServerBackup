@@ -25,9 +25,8 @@ public class BackupCommand implements CommandExecutor {
 
         // Get plugin information
         Plugin plugin = SecureServerBackup.getPlugin(SecureServerBackup.class);
-        plugin.getServer()
-                .getScheduler()
-                .runTask(plugin, new BackupConsumerTask());
+
+        new BackupRunnable().runTaskAsynchronously(plugin);
 
         return true;
     }

@@ -4,7 +4,6 @@ import java.io.File;
 import java.time.Duration;
 import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.scheduler.BukkitScheduler;
 
 public class SecureServerBackup extends JavaPlugin {
 
@@ -41,9 +40,6 @@ public class SecureServerBackup extends JavaPlugin {
         Duration duration = Duration.parse(durationString);
         long durationTicks = duration.toSeconds() * 20;
 
-        // Run backup
-        BukkitScheduler scheduler = this.getServer().getScheduler();
-        scheduler.runTaskTimerAsynchronously(this,
-                new BackupConsumerTask(), 0, durationTicks);
+        new BackupRunnable().runTaskTimerAsynchronously(this, 0, durationTicks);
     }
 }
