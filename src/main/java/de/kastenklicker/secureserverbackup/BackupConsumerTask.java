@@ -42,7 +42,8 @@ public class BackupConsumerTask implements Consumer<BukkitTask> {
         // Get configs
         excludeFiles = configuration.getStringList("excludedFiles");
         backupDirectory = new File(mainDirectory, configuration.getString("backupFolder", "backups"));
-        maxBackupDirectorySize = configuration.getLong("maxBackupFolderSize");
+        maxBackupDirectorySize = configuration.getLong("maxBackupFolderSize")
+                * (1000*1000*1000); // KB*MB*GB;
 
         // Get upload information
         String hostname = configuration.getString("hostname");
