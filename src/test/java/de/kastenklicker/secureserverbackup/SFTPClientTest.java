@@ -1,5 +1,6 @@
 package de.kastenklicker.secureserverbackup;
 
+import static java.lang.System.getenv;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -14,10 +15,10 @@ import org.junit.jupiter.api.Test;
 
 public class SFTPClientTest {
 
-    private final String hostname = "135.181.154.214";
+    private final String hostname = getenv("SECURE_SERVER_BACKUP_HOSTNAME");
     private final int port = 22;
-    private final String username = "kek";
-    private final String authentication = "/home/sven/.ssh/id_ed25519"; // password or path of private key file
+    private final String username = getenv("SECURE_SERVER_BACKUP_USERNAME");
+    private final String authentication = getenv("SECURE_SERVER_BACKUP_AUTHENTICATION_SFTP"); // password or path of private key file
     private final String knownHosts = "/home/sven/.ssh/known_hosts";
     private final int timeout = 20000;
     private final String remoteDirectory = "/home/kek"; // Must not end with slash

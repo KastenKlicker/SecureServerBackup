@@ -1,5 +1,6 @@
 package de.kastenklicker.secureserverbackup;
 
+import static java.lang.System.getenv;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -39,12 +40,12 @@ public class BackupTest {
     @Test
     public void testBackupSFTP() throws Exception {
         UploadClient uploadClient = new SFTPClient(
-                "135.181.154.214", 22,
-                "root",
-                "/home/sven/.ssh/id_ed25519",
+                getenv("SECURE_SERVER_BACKUP_HOSTNAME"), 22,
+                getenv("SECURE_SERVER_BACKUP_USERNAME"),
+                getenv("SECURE_SERVER_BACKUP_AUTHENTICATION_SFTP"),
                 "/home/sven/.ssh/known_hosts",
                 20000,
-                "/root");
+                "/home/kek");
 
         assertTrue(new Backup(
                 new ArrayList<>(),
