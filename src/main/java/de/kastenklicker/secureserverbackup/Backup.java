@@ -46,6 +46,11 @@ public class Backup {
 
         // Append backup directory to excluded files list
         excludeFiles.add(backupDirectory.getName());
+        
+        // Exclude session locks, because those are locked by paper
+        excludeFiles.add("world/session.lock");
+        excludeFiles.add("world_nether/session.lock");
+        excludeFiles.add("world_the_end/session.lock");
 
         // Create backup file
         // With current local time

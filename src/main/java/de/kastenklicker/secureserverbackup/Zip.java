@@ -5,7 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -17,6 +16,7 @@ import java.util.zip.ZipOutputStream;
 public class Zip {
 
     private final ZipOutputStream zipOutputStream;
+    private final FileOutputStream fileOutputStream;
     private final List<String> excludeFiles;
     private final File mainDirectory;
     private final List<String> missingFiles = new ArrayList<>();
@@ -37,8 +37,6 @@ public class Zip {
         ).filter(Objects::nonNull).toList();
 
         // Create Zip OutputStream
-        OutputStream fileOutputStream;
-
         fileOutputStream = new FileOutputStream(backupFile);
 
         zipOutputStream = new ZipOutputStream(fileOutputStream);
@@ -78,8 +76,8 @@ public class Zip {
 
             // File is a real file, so add it
             // Add Entry
-            ZipEntry zipEntry = new ZipEntry(
-                    file.getAbsolutePath().replace(mainDirectory.getAbsolutePath(), ""));
+            ZipEntry zipEntry = new ZipEntry(file.getAbsolutePath()
+                    .replace(mainDirectory.getAbsolutePath(), "").substring(1));
 
             zipOutputStream.putNextEntry(zipEntry);
 
@@ -91,6 +89,8 @@ public class Zip {
             while ((len = fileInputStream.read(buf)) > 0) {
                 zipOutputStream.write(buf, 0, len);
             }
+            
+            zipOutputStream.closeEntry();
             fileInputStream.close();
         }
     }
@@ -101,5 +101,6 @@ public class Zip {
     public void finish() throws IOException {
         zipOutputStream.flush();
         zipOutputStream.close();
+        fileOutputStream.close();
     }
 }
