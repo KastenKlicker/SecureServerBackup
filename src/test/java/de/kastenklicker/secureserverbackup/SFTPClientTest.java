@@ -1,33 +1,62 @@
 package de.kastenklicker.secureserverbackup;
 
-import static java.lang.System.getenv;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.jcraft.jsch.ChannelSftp;
-import com.jcraft.jsch.JSch;
-import com.jcraft.jsch.JSchException;
-import com.jcraft.jsch.Session;
-import com.jcraft.jsch.SftpException;
+import com.jcraft.jsch.*;
+
 import java.io.File;
-import org.junit.jupiter.api.AfterEach;
+import java.io.IOException;
+
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.MountableFile;
 
 public class SFTPClientTest {
 
-    private final String hostname = getenv("SECURE_SERVER_BACKUP_HOSTNAME");
-    private final int port = 22;
-    private final String username = getenv("SECURE_SERVER_BACKUP_USERNAME");
-    private final String authentication = getenv("SECURE_SERVER_BACKUP_AUTHENTICATION_SFTP"); // password or path of private key file
-    private final String knownHosts = "/home/sven/.ssh/known_hosts";
-    private final int timeout = 20000;
-    private final String remoteDirectory = "/home/kek"; // Must not end with slash
+    private static GenericContainer<?> sftpContainer;
+    
+    private static File privateHostKey;
+    private static File publicHostKey;
 
+    private static String hostname;
+    private static int port;
+    private final String username = "foo";
+    private final String authentication = "pass"; // password or path of private key file
+    private final int timeout = 20000;
+    private final String remoteDirectory = "/upload"; // Must not end with slash
+    
+    @BeforeAll
+    public static void BeforeAll() throws IOException, JSchException {
+        
+        // Generate Test RSA Keys
+        KeyPairGenerator keyPairGenerator = new KeyPairGenerator();
+        keyPairGenerator.generate();
+        publicHostKey = keyPairGenerator.getPublicKeyFile();
+        privateHostKey = keyPairGenerator.getPrivateKeyFile();
+        
+        // Create & start Docker Container        
+        sftpContainer = new GenericContainer<>("atmoz/sftp:alpine")
+                .withCopyFileToContainer(
+                        MountableFile.forHostPath(privateHostKey.getAbsolutePath()),
+                        "/etc/ssh/ssh_host_rsa_key"
+                )
+                .withExposedPorts(22)
+                .withCommand("foo:pass:::upload");
+        
+        sftpContainer.start();
+
+        hostname = sftpContainer.getHost();
+        port = sftpContainer.getMappedPort(22);
+    }
+    
     @Test
-    public void testUpload() throws JSchException, SftpException {
+    public void testUpload() throws JSchException, SftpException, IOException {
 
         final SFTPClient sftpClient = new SFTPClient(hostname, port, username,
-                authentication, knownHosts, timeout, remoteDirectory);
+                authentication, publicHostKey.getPath(), timeout, remoteDirectory);
 
         sftpClient.upload(
                 new File("./src/test/resources/zipTest/test.txt"));
@@ -37,7 +66,7 @@ public class SFTPClientTest {
     public void testUploadWrongDirectory() {
 
         final SFTPClient sftpClient = new SFTPClient(hostname, port, username,
-                authentication, knownHosts, timeout,  remoteDirectory + "/sus/kek");
+                authentication, publicHostKey.getPath(), timeout,  remoteDirectory + "/sus/kek");
 
         Exception exception = assertThrows(SftpException.class, () ->
                 sftpClient.upload(
@@ -46,37 +75,17 @@ public class SFTPClientTest {
 
         assertTrue(exception.getMessage().contains("No such file"));
     }
-
-    @AfterEach
-    public void cleanUp() throws JSchException, SftpException {
-        try {
-            JSch jsch = new JSch();
-        jsch.setKnownHosts(knownHosts);
-
-        Session session = jsch.getSession(username, hostname, port);
-
-        // If string is path, then use key authentication, else use password authentication
-        if (new File(authentication).exists()) {
-            jsch.addIdentity(authentication);
-        } else {
-            session.setPassword(authentication);
-        }
-
-        session.connect(timeout);
-        ChannelSftp channelSftp = (ChannelSftp) session.openChannel("sftp");
-
-        // Upload
-        channelSftp.connect(timeout);
-        channelSftp.rm(remoteDirectory + "/test.txt");
-
-        // Disconnect
-        channelSftp.exit();
-        session.disconnect();
-        } catch (Exception e) {
-            if (!e.getMessage().contains("No such file")) {
-                throw e;
-            }
-        }
+    
+    @AfterAll
+    public static void afterAll() {
+        
+        // Stop Docker Container
+        sftpContainer.stop();
+        
+        // Remove HostKeyFiles
+        publicHostKey.delete();
+        privateHostKey.delete();
+        
     }
 
 }

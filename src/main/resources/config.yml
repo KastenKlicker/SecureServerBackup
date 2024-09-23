@@ -11,7 +11,8 @@ username: ""
 # Password or private RSA Key without password for SFTP
 # It's recommended to use a dedicated RSA key pair for SFTP
 authentication: ""
-# KnownHosts file only for SFTP
+# For SFTP only
+# Either the path of the knownHosts file or the RSA HostKey
 knownHosts: ""
 # Timeout in seconds
 timeout: 20
