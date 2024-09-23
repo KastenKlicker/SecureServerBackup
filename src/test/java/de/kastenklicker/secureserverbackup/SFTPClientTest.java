@@ -60,6 +60,11 @@ public class SFTPClientTest {
 
         sftpClient.upload(
                 new File("./src/test/resources/zipTest/test.txt"));
+        
+        // Check if file was transferred correctly
+        File testFile = new File("./src/test/resources/testUpload.txt");
+        sftpContainer.copyFileFromContainer("/home/foo/upload/test.txt", testFile.getPath());
+        assertTrue(testFile.delete());
     }
 
     @Test

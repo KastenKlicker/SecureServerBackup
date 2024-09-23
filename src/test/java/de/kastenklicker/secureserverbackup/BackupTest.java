@@ -68,17 +68,24 @@ public class BackupTest {
                 20000,
                 "/upload");
 
-        assertTrue(new Backup(
+        File backup = new Backup(
                 new ArrayList<>(),
                 backupsDirectory,
                 new File("./src/test/resources/zipTest"),
                 uploadClient,
                 1)
-                .backup().exists());
+                .backup();
+        
+        assertTrue(backup.exists());
         
         // Clean up
         publicHostKey.delete();
         privateHostKey.delete();
+
+        // Check if file was transferred correctly
+        File backupUpload = new File("./src/test/resources/" + backup.getName());
+        sftpContainer.copyFileFromContainer("/home/foo/upload/" + backup.getName(), backupUpload.getPath());
+        assertTrue(backupUpload.delete());
     }
 
     @Test
