@@ -1,15 +1,17 @@
 package de.kastenklicker.secureserverbackup;
 
-import static java.lang.System.getenv;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.GenericContainer;
+import org.testcontainers.utility.MountableFile;
 
 public class BackupTest {
 
@@ -39,13 +41,32 @@ public class BackupTest {
 
     @Test
     public void testBackupSFTP() throws Exception {
+
+        // Generate Test RSA Keys
+        KeyPairGenerator keyPairGenerator = new KeyPairGenerator();
+        keyPairGenerator.generate();
+        File publicHostKey = keyPairGenerator.getPublicKeyFile();
+        File privateHostKey = keyPairGenerator.getPrivateKeyFile();
+        
+        // Create & start Docker Container        
+        GenericContainer<?> sftpContainer = new GenericContainer<>("atmoz/sftp:alpine")
+                .withCopyFileToContainer(
+                        MountableFile.forHostPath(privateHostKey.getAbsolutePath()),
+                        "/etc/ssh/ssh_host_rsa_key"
+                )
+                .withExposedPorts(22)
+                .withCommand("foo:pass:::upload");
+
+        sftpContainer.start();
+        
+        // The real testing
         UploadClient uploadClient = new SFTPClient(
-                getenv("SECURE_SERVER_BACKUP_HOSTNAME"), 22,
-                getenv("SECURE_SERVER_BACKUP_USERNAME"),
-                getenv("SECURE_SERVER_BACKUP_AUTHENTICATION_SFTP"),
-                "/home/sven/.ssh/known_hosts",
+                sftpContainer.getHost(), sftpContainer.getMappedPort(22), 
+                "foo",
+                "pass",
+                publicHostKey.getPath(), 
                 20000,
-                "/home/kek");
+                "/upload");
 
         assertTrue(new Backup(
                 new ArrayList<>(),
@@ -54,6 +75,10 @@ public class BackupTest {
                 uploadClient,
                 1)
                 .backup().exists());
+        
+        // Clean up
+        publicHostKey.delete();
+        privateHostKey.delete();
     }
 
     @Test

@@ -32,8 +32,8 @@ public class KeyPairGenerator {
         KeyPair keyPair = KeyPair.genKeyPair(jSch, KeyPair.RSA, 4096);
 
         // Write Key files to file
-        keyPair.writePrivateKey("src/test/resources/ssh_host_rsa_key");
-        keyPair.writePublicKey("src/test/resources/ssh_host_rsa_key.pub", "sftp@docker");
+        keyPair.writePrivateKey(privateKeyFile.getPath());
+        keyPair.writePublicKey(publicKeyFile.getPath(), "sftp@docker");
         
         
     }
