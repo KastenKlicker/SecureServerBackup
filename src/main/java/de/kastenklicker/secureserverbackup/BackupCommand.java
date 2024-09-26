@@ -22,6 +22,12 @@ public class BackupCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender commandSender, @NotNull Command command,
             @NotNull String s, @NotNull String[] strings) {
+        
+        // Check if commandSender is player
+        if (!commandSender.isOp()) {
+            commandSender.sendMessage("You don't have the permission to backup the server!");
+            return false;
+        }    
 
         // Get plugin information
         Plugin plugin = SecureServerBackup.getPlugin(SecureServerBackup.class);
@@ -30,6 +36,4 @@ public class BackupCommand implements CommandExecutor {
 
         return true;
     }
-
-    // TODO permissions
 }
