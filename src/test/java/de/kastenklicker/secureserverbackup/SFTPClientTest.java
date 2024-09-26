@@ -66,6 +66,24 @@ public class SFTPClientTest {
         sftpContainer.copyFileFromContainer("/home/foo/upload/test.txt", testFile.getPath());
         assertTrue(testFile.delete());
     }
+    
+    @Test
+    public void testUploadScanHostKey() throws JSchException, SftpException, IOException {
+        
+        if (!publicHostKey.delete() && publicHostKey.exists())
+            throw new RuntimeException("Couldn't run test, because publicHostKey file couldn't be deleted");
+        
+        final SFTPClient sftpClient = new SFTPClient(hostname, port, username,
+                authentication, publicHostKey.getPath(), timeout, remoteDirectory);
+
+        sftpClient.upload(
+                new File("./src/test/resources/zipTest/test.txt"));
+
+        // Check if file was transferred correctly
+        File testFile = new File("./src/test/resources/testUpload.txt");
+        sftpContainer.copyFileFromContainer("/home/foo/upload/test.txt", testFile.getPath());
+        assertTrue(testFile.delete());
+    }
 
     @Test
     public void testUploadWrongDirectory() {
