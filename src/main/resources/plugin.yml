@@ -10,3 +10,7 @@ commands:
   backup:
     description: "Backup your server"
     usage: /backup
+    permissions: 
+      backup:
+        description: "Gives access to backup the server manually"
+        default: "op"
