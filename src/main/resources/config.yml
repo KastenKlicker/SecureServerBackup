@@ -12,9 +12,9 @@ username: ""
 # It's recommended to use a dedicated RSA key pair for SFTP
 authentication: ""
 # For SFTP only
-# Either the path of the knownHosts file or the HostKey
-# if empty the server will try to scan and the save the hostKey at the first connection
-knownHosts: "plugins/SecureServerBackup/sftp_hostKey"
+# Either the path of the knownHosts file or the public host key
+# if empty the server will try to scan and the save the public host key at the first connection
+knownHosts: "plugins/SecureServerBackup/sftp_hostKey.pub"
 # Timeout in seconds
 timeout: 20
 # Make sure the remote directory already exists
