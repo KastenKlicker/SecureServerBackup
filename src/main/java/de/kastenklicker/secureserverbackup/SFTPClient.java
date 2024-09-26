@@ -5,6 +5,7 @@ import com.jcraft.jsch.*;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.Base64;
+import java.util.Properties;
 
 public class SFTPClient extends UploadClient{
 
@@ -24,14 +25,34 @@ public class SFTPClient extends UploadClient{
             throws JSchException, SftpException, IOException {
         JSch jsch = new JSch();
         
-        
         File hostKeyFile = new File(knownHosts);
-        String hostKeyFileName = hostKeyFile.getName();
         
-        if (!hostKeyFile.exists())
-            throw new RuntimeException("Couldn't add hostKey. " + hostKeyFileName +  " doesn't exists.");
+        // Scan for Host Key if file doesn't exist
+        if (!hostKeyFile.exists()) {
+            
+            // TODO real world test
 
+            // Get host key
+            Properties config = new Properties();
+            config.put("StrictHostKeyChecking", "no");
+            Session scanSession = jsch.getSession(username, hostname, port);
+            scanSession.setConfig(config);
+            try {
+                scanSession.connect(timeout);
+            } catch (JSchException e) {
+                if (!e.getMessage().contains("Auth fail"))
+                    throw e;
+            }
+            HostKey hostkey = scanSession.getHostKey();
+
+            // Write host key to file
+            BufferedWriter writer = new BufferedWriter(new FileWriter(hostKeyFile));
+            writer.write(hostkey.getType() + " " + hostkey.getKey() + " " + hostkey.getComment());
+            writer.close();
+        }
+        
         // Check if the given String is the knownHosts file or a HostKey
+        String hostKeyFileName = hostKeyFile.getName();
         if (hostKeyFileName.length() >= 4 &&    // File ist a public HostKey
                 hostKeyFileName.substring(hostKeyFileName.length() - 4).equalsIgnoreCase(".pub")) {
             // Add public hostKey            
