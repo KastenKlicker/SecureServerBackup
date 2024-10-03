@@ -41,8 +41,8 @@ public class FTPSClient extends UploadClient {
         
         // Upload file
         FileInputStream fileInputStream = new FileInputStream(file);
-        String remoteFile = new File(remoteDirectory, file.getName()).getAbsolutePath();
-        ftpsClient.storeFile(remoteFile, fileInputStream);
+        ftpsClient.changeWorkingDirectory(remoteDirectory);
+        ftpsClient.storeFile(file.getName(), fileInputStream);
         fileInputStream.close();
         
         // Finish upload

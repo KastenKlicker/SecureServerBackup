@@ -70,7 +70,7 @@ public class ZipTest {
 
     @AfterEach
     public void deleteTestFile() {
-        if (!testFile.delete())
+        if (!testFile.delete() && !System.getProperty("os.name").toLowerCase().contains("windows"))
             throw new RuntimeException("Could not delete test file: " + testFile.getAbsolutePath());
     }
 
