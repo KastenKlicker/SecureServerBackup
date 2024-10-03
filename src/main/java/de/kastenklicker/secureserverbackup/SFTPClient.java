@@ -15,7 +15,7 @@ public class SFTPClient extends UploadClient{
     }
 
     /**
-     * Internal helper method to upload file to sftp server
+     * Method to upload file to sftp server
      * @param backupFile file to upload
      * @throws JSchException Some exceptions
      * @throws SftpException Some exceptions
@@ -29,8 +29,6 @@ public class SFTPClient extends UploadClient{
         
         // Scan for Host Key if file doesn't exist
         if (!hostKeyFile.exists()) {
-            
-            // TODO real world test
 
             // Get host key
             Properties config = new Properties();

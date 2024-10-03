@@ -55,6 +55,11 @@ public class BackupRunnable extends BukkitRunnable {
                 uploadClient = new SFTPClient(hostname, port, username, authentication,
                         knownHosts, timeout, remoteDirectory);
                 break;
+                
+            case "ftps":
+                uploadClient = new FTPSClient(hostname, port, username, authentication,
+                        knownHosts, timeout, remoteDirectory);
+                break;
 
             default:
                 uploadClient = new NullUploadClient();
