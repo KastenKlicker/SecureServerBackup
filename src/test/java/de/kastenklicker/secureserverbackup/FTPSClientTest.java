@@ -43,7 +43,7 @@ public class FTPSClientTest {
                 .withEnv("TLS_CERT", "/letsencrypt/cert.pem")
                 .withEnv("TLS_KEY", "/letsencrypt/key.pem")
                 .withCopyFileToContainer(
-                        MountableFile.forHostPath("cert_old/"),
+                        MountableFile.forHostPath(parentDir.getAbsolutePath()),
                         "/letsencrypt"
                 )
         ;
@@ -80,6 +80,8 @@ public class FTPSClientTest {
         ftpsContainer.stop();
         
         // Delete certificates
+        certFile.delete();
+        keyFile.delete();
         parentDir.delete();
 
     }
