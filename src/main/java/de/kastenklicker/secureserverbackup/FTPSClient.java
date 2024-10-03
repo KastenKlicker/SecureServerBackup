@@ -1,6 +1,7 @@
 package de.kastenklicker.secureserverbackup;
 
 import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPConnectionClosedException;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,12 +34,14 @@ public class FTPSClient extends UploadClient {
         // Upload file
         FileInputStream fileInputStream = new FileInputStream(file);
         String remoteFile = new File(remoteDirectory, file.getName()).getAbsolutePath();
-        System.out.println(ftpsClient.printWorkingDirectory());
         ftpsClient.storeFile(remoteFile, fileInputStream);
         fileInputStream.close();
         
         // Finish upload
-        ftpsClient.logout();
+        try {
+            ftpsClient.logout();
+        } catch (FTPConnectionClosedException ignore) {} 
+            
         ftpsClient.disconnect();
     }
 }

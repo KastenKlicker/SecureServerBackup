@@ -3,10 +3,7 @@ package de.kastenklicker.secureserverbackup;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.testcontainers.containers.GenericContainer;
-import org.testcontainers.containers.output.Slf4jLogConsumer;
+import org.testcontainers.containers.FixedHostPortGenericContainer;
 import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
@@ -15,10 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FTPSClientTest {
 
-    private static GenericContainer<?> ftpsContainer;
-    
-    private static final Logger LOGGER = LoggerFactory.getLogger(FTPSClientTest.class);
-    private static final Slf4jLogConsumer logConsumer = new Slf4jLogConsumer(LOGGER);
+    private static FixedHostPortGenericContainer<?> ftpsContainer;
 
     private static String hostname;
     private static int port;
@@ -29,7 +23,8 @@ public class FTPSClientTest {
     @BeforeAll
     public static void BeforeAll() {
         // Create & start Docker Container
-        ftpsContainer = new GenericContainer<>("delfer/alpine-ftp-server:latest")
+        ftpsContainer = new FixedHostPortGenericContainer<>("delfer/alpine-ftp-server:latest")
+                .withFixedExposedPort(21000, 21000)
                 .withExposedPorts(21)
                 .withEnv("MIN_PORT", "21000")
                 .withEnv("MAX_PORT", "21000")
@@ -42,8 +37,6 @@ public class FTPSClientTest {
         ;
         
         ftpsContainer.start();
-
-        ftpsContainer.followOutput(logConsumer);
         
         hostname = ftpsContainer.getHost();
         port = ftpsContainer.getMappedPort(21);
@@ -60,7 +53,7 @@ public class FTPSClientTest {
 
         // Check if file was transferred correctly
         File testFile = new File("./src/test/resources/testUpload.txt");
-        ftpsContainer.copyFileFromContainer("/files/test.txt", testFile.getPath());
+        ftpsContainer.copyFileFromContainer("/ftp/alpineftp/test.txt", testFile.getPath());
         assertTrue(testFile.delete());
     }
 
