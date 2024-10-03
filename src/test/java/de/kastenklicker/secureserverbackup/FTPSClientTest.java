@@ -8,6 +8,7 @@ import org.testcontainers.utility.MountableFile;
 
 import java.io.File;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class FTPSClientTest {
@@ -64,13 +65,14 @@ public class FTPSClientTest {
         final FTPSClient ftpsClient = new FTPSClient(hostname, port, USERNAME,
                 AUTHENTICATION, null, 0, REMOTE_DIRECTORY);
         
-         ftpsClient.upload(
-                new File("./src/test/resources/zipTest/test.txt"));
+        File testFile = new File("./src/test/resources/zipTest/test.txt");
+         ftpsClient.upload(testFile);
 
         // Check if file was transferred correctly
-        File testFile = new File("./src/test/resources/testUpload.txt");
-        ftpsContainer.copyFileFromContainer(REMOTE_DIRECTORY + "/test.txt", testFile.getPath());
-        assertTrue(testFile.delete());
+        File testFileUpload = new File("./src/test/resources/testUpload.txt");
+        ftpsContainer.copyFileFromContainer(REMOTE_DIRECTORY + "/test.txt", testFileUpload.getPath());
+        assertEquals(testFile.length(), testFileUpload.length());
+        assertTrue(testFileUpload.delete());
     }
 
     @AfterAll
