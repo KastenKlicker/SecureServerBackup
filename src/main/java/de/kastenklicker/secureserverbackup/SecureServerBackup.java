@@ -4,6 +4,8 @@ import java.io.File;
 import java.time.Duration;
 import java.time.format.DateTimeParseException;
 import java.util.logging.Logger;
+
+import org.bstats.bukkit.Metrics;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public class SecureServerBackup extends JavaPlugin {
@@ -11,9 +13,9 @@ public class SecureServerBackup extends JavaPlugin {
     @Override
     public void onEnable() {
 
-        //bstats Metrics
-        //int pluginId = 11313;
-        //new Metrics(this, pluginId);
+        // bstats Metrics
+        int pluginId = 11313;
+        new Metrics(this, pluginId);
 
         Logger logger = this.getLogger();
 
