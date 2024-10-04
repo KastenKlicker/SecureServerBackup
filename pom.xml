@@ -9,6 +9,14 @@
     <version>2.0.0</version>
     <url>https://github.com/KastenKlicker/SecureServerBackup</url>
 
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>https://raw.githubusercontent.com/KastenKlicker/SecureServerBackup/refs/heads/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
