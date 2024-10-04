@@ -5,7 +5,7 @@ Backup your minecraft server automatic and fast without lags or freeze and uploa
 
 To get started check: https://github.com/KastenKlicker/SecureServerBackup/wiki
 
-# Licence informations:
+# Licence informations for used libraries:
 
 Apache 2.0: AutoService, error-prone annotations, JSpecify annotations, org.apiguardian:apiguardian-api, org.opentest4j:opentest4j, Apache Commons Lang, Apache Log4j API, Guava: Google Core Libraries for Java, J2ObjC Annotations, Plexus Common Utilities, Plexus Interpolation API, SnakeYAML, fastutil, FindBugs-jsr305, Guava InternalFutureFailureAccess and InternalFutures, Guava ListenableFuture only, JSON.simple, Jackson-annotations, JetBrains Java Annotations, docker-java-api, docker-java-transport, docker-java-transport-zerodep, javax.inject, Apache Commons Compress, Apache Commons Net, Gson, Java Native Access, Maven Artifact, Maven Artifact Resolver API, Maven Artifact Resolver Implementation, Maven Artifact Resolver Named Locks, Maven Artifact Resolver Provider, Maven Artifact Resolver SPI, Maven Artifact Resolver Utilities, Maven Builder Support, Maven Model, Maven Model Builder, Maven Repository Metadata Model
 
