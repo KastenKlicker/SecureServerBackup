@@ -1,7 +1,8 @@
 # SecureServerBackup
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/kastenklicker/secureserverbackup/total?color=green&logo=github&style=flat-square">
 
-Backup your minecraft server automatic and fast without lags or freeze and upload the backups to a SFTP/FTPS server.
+Backup your paper server automatic and fast without lags or freeze and upload the backups to a SFTP/FTPS server.
+This plugin doesn't support Spigot and Bukkit after Version 2.0.0. Folia is untested.
 
 To get started check: https://github.com/KastenKlicker/SecureServerBackup/wiki
 
