@@ -2,6 +2,7 @@ package de.kastenklicker.secureserverbackup;
 
 import java.io.File;
 import java.time.Duration;
+import java.time.format.DateTimeParseException;
 import java.util.logging.Logger;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -37,9 +38,13 @@ public class SecureServerBackup extends JavaPlugin {
         // Set periode of backups
         // Convert time format to ticks
         String durationString = getConfig().getString("duration", "P1D");
-        Duration duration = Duration.parse(durationString);
-        long durationTicks = duration.toSeconds() * 20;
+        try {
+            Duration duration = Duration.parse(durationString);
+            long durationTicks = duration.toSeconds() * 20;
 
-        new BackupRunnable().runTaskTimerAsynchronously(this, 0, durationTicks);
+            new BackupRunnable().runTaskTimerAsynchronously(this, 0, durationTicks);
+        } catch (DateTimeParseException e) {
+            logger.warning("Couldn't parse duration. Disabling autobackup.");
+        }
     }
 }
