@@ -28,7 +28,6 @@
             <id>papermc</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
         </repository>
-
     </repositories>
 
     <dependencies>
@@ -48,46 +47,11 @@
             <scope>compile</scope>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/com.github.mwiede/jsch -->
         <dependency>
-            <groupId>com.github.mwiede</groupId>
-            <artifactId>jsch</artifactId>
-            <version>0.2.20</version>
+            <groupId>de.kastenklicker</groupId>
+            <artifactId>SecureServerBackupLibrary</artifactId>
+            <version>1.0.0</version>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
-        <dependency>
-            <groupId>commons-net</groupId>
-            <artifactId>commons-net</artifactId>
-            <version>3.11.1</version>
-        </dependency>
-        
-        <!-- https://mvnrepository.com/artifact/org.bouncycastle/bctls-jdk18on -->
-        <dependency>
-            <groupId>org.bouncycastle</groupId>
-            <artifactId>bctls-jdk18on</artifactId>
-            <version>1.78.1</version>
-        </dependency>
-
-
-        <!-- Testing -->
-
-        <!-- https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.11.1</version>
-            <scope>test</scope>
-        </dependency>
-        
-        <!-- https://mvnrepository.com/artifact/org.testcontainers/junit-jupiter -->
-        <dependency>
-            <groupId>org.testcontainers</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>1.20.2</version>
-            <scope>test</scope>
-        </dependency>
-
     </dependencies>
 
     <build>
