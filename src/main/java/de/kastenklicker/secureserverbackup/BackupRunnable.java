@@ -3,6 +3,12 @@ package de.kastenklicker.secureserverbackup;
 import java.io.File;
 import java.util.List;
 import java.util.logging.Logger;
+
+import de.kastenklicker.secureserverbackuplibrary.Backup;
+import de.kastenklicker.secureserverbackuplibrary.upload.FTPSClient;
+import de.kastenklicker.secureserverbackuplibrary.upload.NullUploadClient;
+import de.kastenklicker.secureserverbackuplibrary.upload.SFTPClient;
+import de.kastenklicker.secureserverbackuplibrary.upload.UploadClient;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -52,13 +58,14 @@ public class BackupRunnable extends BukkitRunnable {
 
         switch (configuration.getString("uploadProtocol", "")) {
             case "sftp":
+                if (knownHosts == null)
+                    throw new NullPointerException("Read null for knownHosts! Check your config.yml.");
                 uploadClient = new SFTPClient(hostname, port, username, authentication,
-                        knownHosts, timeout, remoteDirectory);
+                        new File(knownHosts), timeout, remoteDirectory);
                 break;
                 
             case "ftps":
-                uploadClient = new FTPSClient(hostname, port, username, authentication,
-                        knownHosts, timeout, remoteDirectory);
+                uploadClient = new FTPSClient(hostname, port, username, authentication, remoteDirectory);
                 break;
 
             default:
