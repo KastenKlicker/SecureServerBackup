@@ -46,6 +46,14 @@
             <version>3.1.0</version>
             <scope>compile</scope>
         </dependency>
+        
+        <!-- The adventure-api is needed by Spigot-->
+        <!-- https://mvnrepository.com/artifact/net.kyori/adventure-api -->
+        <dependency>
+            <groupId>net.kyori</groupId>
+            <artifactId>adventure-api</artifactId>
+            <version>4.17.0</version>
+        </dependency>
 
         <dependency>
             <groupId>de.kastenklicker</groupId>
@@ -72,6 +80,12 @@
                             <shadedPattern>de.kastenklicker.secureserverbackup</shadedPattern>
                         </relocation>
                     </relocations>
+                    <filters>
+                        <filter>
+                            <artifact>*:*</artifact>
+                            <excludes>META-INF/*.SF,META-INF/*.DSA,META-INF/*.RSA</excludes>
+                        </filter>
+                    </filters>
                 </configuration>
                 <executions>
                     <execution>
