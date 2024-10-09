@@ -49,8 +49,8 @@
 
         <dependency>
             <groupId>de.kastenklicker</groupId>
-            <artifactId>SecureServerBackupLibrary</artifactId>
-            <version>1.0.0</version>
+            <artifactId>secure-server-backup-library</artifactId>
+            <version>1.0.1</version>
         </dependency>
     </dependencies>
 
