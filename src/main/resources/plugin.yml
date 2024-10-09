@@ -1,5 +1,5 @@
 main: de.kastenklicker.secureserverbackup.SecureServerBackup
-version: 2.0.0
+version: 2.0.1
 name: SecureServerBackup
 description: Plugin to backup your server.
 api-version: 1.21.1
