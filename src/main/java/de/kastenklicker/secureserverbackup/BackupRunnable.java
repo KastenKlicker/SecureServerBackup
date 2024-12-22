@@ -2,7 +2,6 @@ package de.kastenklicker.secureserverbackup;
 
 import java.io.File;
 import java.util.List;
-import java.util.logging.Logger;
 
 import de.kastenklicker.secureserverbackuplibrary.Backup;
 import de.kastenklicker.secureserverbackuplibrary.upload.FTPSClient;
@@ -20,7 +19,6 @@ public class BackupRunnable extends BukkitRunnable {
     private final File backupDirectory;
     private final File mainDirectory;
     private final UploadClient uploadClient;
-    private final Logger logger;
     private final long maxBackupDirectorySize;
 
     private final BackupLogger backupLogger;
@@ -36,7 +34,6 @@ public class BackupRunnable extends BukkitRunnable {
 
         // Get plugin information
         Plugin plugin = SecureServerBackup.getPlugin(SecureServerBackup.class);
-        logger = plugin.getLogger();
         FileConfiguration configuration = plugin.getConfig();
 
         mainDirectory = plugin.getDataFolder().getAbsoluteFile().getParentFile().getParentFile();
@@ -107,16 +104,6 @@ public class BackupRunnable extends BukkitRunnable {
             backup.backup();
         } catch (Exception e) {
             throw new RuntimeException(e);
-        }
-
-
-        // Check which files should be included in the backup, but aren't
-        List<String> missingFiles = backup.getMissingFiles();
-        if (!missingFiles.isEmpty()) {
-            backupLogger.warning("The following files should be excluded, but aren't: ");
-            for (String fileName : missingFiles) {
-                logger.warning(fileName);
-            }
         }
 
         backupLogger.info("Finished Backup.");

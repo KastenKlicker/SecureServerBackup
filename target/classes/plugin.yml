@@ -1,0 +1,16 @@
+main: de.kastenklicker.secureserverbackup.SecureServerBackup
+version: 2.0.1
+name: SecureServerBackup
+description: Plugin to backup your server.
+api-version: 1.21.1
+author:
+  KastenKlicker
+website: https://github.com/KastenKlicker/SecureServerBackup
+commands:
+  backup:
+    description: "Backup your server"
+    usage: /backup
+    permissions: 
+      backup:
+        description: "Gives access to backup the server manually"
+        default: "op"
