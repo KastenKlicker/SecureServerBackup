@@ -1,8 +1,8 @@
 # SecureServerBackup
 <img alt="GitHub all releases" src="https://img.shields.io/github/downloads/kastenklicker/secureserverbackup/total?color=green&logo=github&style=flat-square">
 
-Backup your paper server automatic and fast without lags or freeze and upload the backups to a SFTP/FTPS server.
-This plugin doesn't support Spigot and Bukkit after Version 2.0.0. Folia is untested.
+Backup your Paper and Spigot server automatic and fast without lags or freeze and upload the backups to a SFTP/FTPS server.
+Folia and Bukkit are untested.
 
 To get started check: https://github.com/KastenKlicker/SecureServerBackup/wiki
 
