@@ -1,24 +1,28 @@
 package de.kastenklicker.secureserverbackup;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import de.kastenklicker.secureserverbackuplibrary.Backup;
 import de.kastenklicker.secureserverbackuplibrary.upload.FTPSClient;
-import de.kastenklicker.secureserverbackuplibrary.upload.NullUploadClient;
 import de.kastenklicker.secureserverbackuplibrary.upload.SFTPClient;
 import de.kastenklicker.secureserverbackuplibrary.upload.UploadClient;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitWorker;
+import org.jetbrains.annotations.NotNull;
 
 public class BackupRunnable extends BukkitRunnable {
 
     private final List<String> excludeFiles;
+    private final List<String> includedFiles;
     private final File backupDirectory;
     private final File mainDirectory;
-    private final UploadClient uploadClient;
+    private final List<UploadClient> uploadClients = new ArrayList<>();
     private final long maxBackupDirectorySize;
 
     private final BackupLogger backupLogger;
@@ -40,33 +44,46 @@ public class BackupRunnable extends BukkitRunnable {
 
         // Get configs
         excludeFiles = configuration.getStringList("excludedFiles");
+        
+        // Exclude session locks, because those are locked by paper
+        excludeFiles.add("world/session.lock");
+        excludeFiles.add("world_nether/session.lock");
+        excludeFiles.add("world_the_end/session.lock");
+        
+        includedFiles = configuration.getStringList("includedFiles");
+        if (includedFiles.isEmpty()) {
+            includedFiles.addAll(List.of(Objects.requireNonNull(mainDirectory.list())));
+        }
         backupDirectory = new File(mainDirectory, configuration.getString("backupFolder", "backups"));
         maxBackupDirectorySize = configuration.getLong("maxBackupFolderSize")
                 * (1000*1000*1000); // KB*MB*GB;
 
-        // Get upload information
-        String hostname = configuration.getString("hostname");
-        int port = configuration.getInt("port");
-        String username = configuration.getString("username");
-        String authentication = configuration.getString("authentication");
-        String knownHosts = configuration.getString("knownHosts");
-        int timeout = configuration.getInt("timeout")*1000;
-        String remoteDirectory = configuration.getString("remoteDirectory");
+        @NotNull List<Map<?, ?>> uploadServers = configuration.getMapList("uploadServers");
 
-        switch (configuration.getString("uploadProtocol", "")) {
-            case "sftp":
-                if (knownHosts == null)
-                    throw new NullPointerException("Read null for knownHosts! Check your config.yml.");
-                uploadClient = new SFTPClient(hostname, port, username, authentication,
-                        new File(knownHosts), timeout, remoteDirectory);
-                break;
-                
-            case "ftps":
-                uploadClient = new FTPSClient(hostname, port, username, authentication, remoteDirectory);
-                break;
+        for (Map<?, ?> uploadServer : uploadServers) {
 
-            default:
-                uploadClient = new NullUploadClient();
+            // Get upload information
+            String protocol = (String) uploadServer.get("uploadProtocol");
+            String hostname = (String) uploadServer.get("hostname");
+            int port = (int) uploadServer.get("port");
+            String username = (String) uploadServer.get("username");
+            String authentication = (String) uploadServer.get("authentication");
+            String knownHosts = (String) uploadServer.get("knownHosts");
+            int timeout = (int) uploadServer.get("timeout")*1000;
+            String remoteDirectory = (String) uploadServer.get("remoteDirectory");
+            
+            switch (protocol) {
+                case "sftp":
+                    if (knownHosts == null)
+                        throw new NullPointerException("Read null for knownHosts! Check your config.yml.");
+                    uploadClients.add(new SFTPClient(hostname, port, username, authentication,
+                            new File(knownHosts), timeout, remoteDirectory));
+                    break;
+
+                case "ftps":
+                    uploadClients.add(new FTPSClient(hostname, port, username, authentication, remoteDirectory));
+                    break;
+            }
         }
     }
 
@@ -98,8 +115,8 @@ public class BackupRunnable extends BukkitRunnable {
         }
 
         // Backup files
-        Backup backup = new Backup(excludeFiles, backupDirectory,
-                mainDirectory, uploadClient, maxBackupDirectorySize);
+        Backup backup = new Backup(includedFiles,excludeFiles, backupDirectory,
+                mainDirectory, uploadClients, maxBackupDirectorySize);
         try {
             backup.backup();
         } catch (Exception e) {
