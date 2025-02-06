@@ -4,25 +4,46 @@
 backupFolder: "backups"
 # Maximum backup size in Gigabyte
 maxBackupFolderSize: 10
-excludeFiles: []
+excludeFiles: [] # The backup directory will never be part of the backup
+includedFiles: [] # If empty, all files, except the excluded ones, will be included
 # Upload section
-# Possible value sftp, if empty the backup won't be uploaded
-uploadProtocol: ""
-hostname: ""
-port: 22
-username: ""
-# Password or private RSA Key without password for SFTP
-# It's recommended to use a dedicated RSA key pair for SFTP
-# Password for FTPS
-authentication: ""
-# For SFTP only
-# Either the path of the knownHosts file or the public host key
-# if empty the server will try to scan and the save the public host key at the first connection
-knownHosts: "plugins/SecureServerBackup/sftp_hostKey.pub"
-# Timeout in seconds
-timeout: 20
-# Make sure the remote directory already exists
-remoteDirectory: "myServerBackups"
+uploadServers:
+  - 
+      # Possible value sftp & ftps if empty the backup won't be uploaded
+      uploadProtocol: ""
+      hostname: ""
+      port: 22
+      username: ""
+      # Password or private RSA Key without password for SFTP
+      # It's recommended to use a dedicated RSA key pair for SFTP
+      # Password for FTPS
+      authentication: ""
+      # For SFTP only
+      # Either the path of the knownHosts file or the public host key
+      # if empty the server will try to scan and the save the public host key at the first connection
+      knownHosts: "plugins/SecureServerBackup/sftp_hostKey.pub"
+      # Timeout in seconds
+      timeout: 20
+      # Make sure the remote directory already exists
+      remoteDirectory: "myServerBackups"
+  - 
+      # Possible value sftp & ftps if empty the backup won't be uploaded
+      uploadProtocol: ""
+      hostname: ""
+      port: 22
+      username: ""
+      # Password or private RSA Key without password for SFTP
+      # It's recommended to use a dedicated RSA key pair for SFTP
+      # Password for FTPS
+      authentication: ""
+      # For SFTP only
+      # Either the path of the knownHosts file or the public host key
+      # if empty the server will try to scan and the save the public host key at the first connection
+      knownHosts: "plugins/SecureServerBackup/sftp_hostKey.pub"
+      # Timeout in seconds
+      timeout: 20
+      # Make sure the remote directory already exists
+      remoteDirectory: "myServerBackups"      
 # Duration between backups, see more examples at:
 # https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/Duration.html#parse(java.lang.CharSequence)
 # Invalid values will disable autobackup
